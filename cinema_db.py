@@ -1,30 +1,28 @@
 class CinemaDatabaseManager:
     
     GET_ALL_MOVIES_QUERY = """
-        SELECT movie_id, movie_name, rating
+        SELECT movie_id, movie_name, movie_rating
         FROM Movies
     """
 
     GET_MOVIE_BY_ID_QUERY = """
-        SELECT movie_id, movie_name, rating
+        SELECT movie_id, movie_name, movie_rating
         FROM Movies
         WHERE movie_id = ?
     """
 
-    @classmethod
-    def get_movie_by_id(cls, conn, movie_id):
-        cursor = conn.cursor()
-        result = cursor.execute(cls.GET_MOVIE_BY_ID_QUERY, (movie_id, ))
+    def __init__(self, conn):
+        self.__conn = conn
+
+    def get_movie_by_id(self, movie_id):
+        cursor = self.__conn.cursor()
+        result = cursor.execute(self.__class__.GET_MOVIE_BY_ID_QUERY, (movie_id, ))
 
         return result.fetchone()
 
+    def get_all_movies(self):
+        cursor = self.__conn.cursor()
 
-    @classmethod
-    def get_all_movies(cls, conn):
-        cursor = conn.cursor()
+        result = cursor.execute(self.__class__.GET_ALL_MOVIES_QUERY)
 
-        result = cursor.execute(cls.GET_ALL_MOVIES_QUERY)
-
-        return result.fetchall()
-
-        
+        return result.fetchall()    
